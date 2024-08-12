@@ -1,26 +1,20 @@
 const fastify = require('fastify')({ logger: true });
-const dotenv = require('dotenv');
-dotenv.config();
-//calling models
-// const setupLogin = require('./api/signup');
-const setupSwagger = require('./config/swagger');
+require("dotenv").config();
 const setupMongoDB = require('./config/mongodb');
 const setupMiddleware = require('./middleware/middleware');
-const setupRoutes = require('./routes');
-require('./models/company');
-require('./models/section');
-require('./models/template');
-require('./models/theme');
+const companyRoutes = require("./routes/companyRoutes")
+fastify.register(import('@fastify/swagger'));
+fastify.register(import('@fastify/swagger-ui'), {
+  routePrefix: '/documentation'
+});
 
-const startServer = async () => {
+//register routes
+fastify.register(companyRoutes, {prefix: '/company'})
+
+const start = async () => {
   try {
-    
-    await setupSwagger(fastify);
     await setupMongoDB();
-    // setupLogin(fastify);
     setupMiddleware(fastify);
-    setupRoutes(fastify);
-
     fastify.listen({ port: 4000 }, (err, address) => {
       if (err) {
         fastify.log.error(err);
@@ -35,4 +29,4 @@ const startServer = async () => {
   }
 };
 
-startServer();
+start();

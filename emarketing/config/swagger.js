@@ -11,6 +11,9 @@ const setupSwagger = async (fastify) => {
         version: '0.1.0'
       },
       servers: [{ url: 'http://localhost:3000' }],
+      tags: [
+        { name: 'company', description: 'company related end-points' },
+      ],
       components: {
         securitySchemes: {
           apiKey: {

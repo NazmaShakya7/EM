@@ -1,19 +1,20 @@
 //schema 
 const mongoose = require('mongoose');
-const Section = require('./section');
-const Theme= require('./theme');
 const companySchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     address: {
       type: String,
       required: true,
+      unique: true,
     },
     phone: {
       type: String,
       required: true,
+      unique: true,
     },
     logo: {
       type: String,
@@ -22,11 +23,23 @@ const companySchema = new mongoose.Schema({
     slug: {
       type: String,
       required: true,
+      unique: true,
     },
-    theme: {type: mongoose.Schema.Types.ObjectId, ref:'Theme'},
-    sections: [{type: mongoose.Schema.Types.ObjectId, ref: 'Section'}],
+    template: [
+      {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Template'
+      }
+    ],
+    createdAt : {
+      type: Date,
+      default: Date.now
+    },
+    published: {
+      type: Boolean,
+      required: true,
+    }
   });
-  //creating model of company
 
   const Company = mongoose.model('Company', companySchema);
   module.exports = Company;
