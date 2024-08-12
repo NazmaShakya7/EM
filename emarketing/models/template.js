@@ -9,6 +9,14 @@ const templateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  section: 
+    {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Section'
+    }
+ 
+    
+  
 });
 
 const Template = mongoose.model('Template', templateSchema);

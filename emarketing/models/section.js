@@ -1,21 +1,42 @@
 const mongoose = require('mongoose');
-const Template = require('./template');
 
-const sectionSchema = new mongoose.Schema({
-  template: {
-    type: mongoose.Schema.Types.ObjectId, ref: 'template',
-    required: true
-  },
-  data: {
+const SectionSchema = new mongoose.Schema({
+  image: {
     type: Map,
-    of: mongoose.Schema.Types.Mixed //for different maps
+    of: String,  
+  },
+  heading: {
+    type: String,
+    // required: true,  
+  },
+  subHeading: {
+    type: String,
+    // required: true,  
+  },
+  description: {
+    type: String,
+    // required: true,  
+  },
+  primaryButtonText: {
+    type: String,
+    // required: true, 
+  },
+  secondaryButtonText: {
+    type: String,
+    // required: true,  
   },
   order: {
-    type: Number,
-    required: true
-  }
+    type: String,
+    // required: true, 
+  },
+  template: 
+    {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Template'
+    }
+  
 });
 
-//same here as well
-const Section = mongoose.model('Section', sectionSchema);
-module.exports = Section; 
+console.log("test22");
+const section = mongoose.model('section', SectionSchema);
+module.exports = section; 
