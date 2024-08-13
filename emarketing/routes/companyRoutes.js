@@ -42,9 +42,8 @@ module.exports = async function(fastify, options){
           type: "object",
           properties: {
             page:{type: "integer"},
-            limit:{type: "integer"}
-          },
-          required: ['page', 'limit'],
+            pageSize:{type: "integer"}
+          }
         },
         response: {
           200: {
@@ -63,9 +62,23 @@ module.exports = async function(fastify, options){
       },
       handler: async function listCompanyHandler(request, reply){
         try {
-          const company = await Company.find().populate('template')
-          reply.code(200);
-          return company
+          const page= request.query.page ;
+          const limit=request.query.pageSize;
+          const skip=(page - 1) * limit
+          const count = await Company.countDocuments()
+          const pages= Math.ceil(count/ limit)
+          if (page > pages) {
+            reply.code(404)
+            return { error: "No page found" }
+          }
+          const company = await Company.find().populate('template').skip(skip).limit(limit)
+          reply.code(200)
+          return ({
+            page,
+            limit,
+            count,
+            items: company
+          });
         } catch (error) {
           this.log.error(error)
           reply.code(500)
@@ -115,17 +128,43 @@ module.exports = async function(fastify, options){
       handler: async function updateCompanyHandler(request, reply){
         try {
           const company = await Company.findByIdAndUpdate( request.params.id, request.body,{new: true} ).populate('template')
+          if(!company){
+            reply.code(404)
+            return {error: "Company not found"}
+          }
           reply.code(200);
           return company
         } catch (error) {
-          this.log.error(error)
+          if(error.code === 11000){
+            reply.code(409);
+            return{ error: "A company with this data already exists"}
+          }
           reply.code(500)
-          return { error: "Internal Server Error" }
+          return { error: "Internal Server Error"}
         }
       }
     }
 
     )
+    fastify.delete( "/:id",{
+      schema: {
+        description: "Delete single company",
+        tags: ["company"],
+        params: schema.paramsSchema,
+      },
+      handler: async function deleteCompanyHandler(request, reply){
+        try {
+          await Company.findByIdAndDelete(request.params.id)
+          reply.code(204);
+          return {message: "Successfully deleted"}
+        } catch (error) {
+          this.log.error(error)
+          reply.code(500)
+          return { error: "Cannot delete data" }
+        }
+      }
+    }
+  )
 
 
 }

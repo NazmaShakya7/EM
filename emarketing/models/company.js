@@ -35,10 +35,10 @@ const companySchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     },
-    published: {
-      type: Boolean,
-      required: true,
-    }
+    // published: {
+    //   type: Boolean,
+    //   required: true,
+    // }
   });
 
   const Company = mongoose.model('Company', companySchema);
