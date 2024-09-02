@@ -1,16 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= data.name %> | <%= data.template.template_name %></title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
 </head>
+
 <body>
-  <!-- <% sections.forEach(section => { %>
-    <%- include(section.temp_location, { data: section.data ,company:company }) %> 
-  <% }) %> -->
-  <%- include(data.sectionMap['header 1']) %>
-<!-- Other content -->
-<%- include(data.sectionMap['footer 1']) %>
+    <%- include('./header/header1.ejs', {data: data}) %>
+
+    
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-content">
+            
+            <h1><%= data.template.page.section[0].data.heading %></h1>
+            <h2><%= data.template.page.section[0].data.subHeading %></h2>
+            <p><%= data.template.page.section[0].data.description %></p>
+            <div class="hero-buttons">
+                <a href="#get-started" class="btn-primary"><%= data.template.page.section[0].data.primaryButtonText %></a>
+                <a href="#learn-more" class="btn-secondary"><%= data.template.page.section[0].data.secondaryButtonText %></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Info -->
+    <%- include('./footer/footer1.ejs', {data: data}) %>
+    
+
 </body>
 </html>

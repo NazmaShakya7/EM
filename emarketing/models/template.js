@@ -1,5 +1,6 @@
-
 const mongoose = require('mongoose');
+// Assuming Page model is defined somewhere
+
 
 const templateSchema = new mongoose.Schema({
   category: {
@@ -11,22 +12,17 @@ const templateSchema = new mongoose.Schema({
     required: true,
   },
   page: {
-    id: {
-      type: String,
-      required: true,
-    },
-    pagetype: {
-      type: String,
-      required: true,
-    },
-    section: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Section',
-      },
-    ],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Page',
   },
+  company:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+
+  }
 });
 
+
 const Template = mongoose.model('Template', templateSchema);
+
 module.exports = Template;

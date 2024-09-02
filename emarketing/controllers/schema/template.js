@@ -3,40 +3,14 @@ const templateBodySchema = {
     properties: {
         template_name: { type: 'string' },
         category: {type: 'string'},
-        page: {
-            type: 'object',
-
-            properties: {
-                id: { type: 'string' }, 
-                pagetype: { type: 'string' },
-              section: {
-                type: 'object',
-            properties: {
-              _id: { type: 'string' },
-              type: { type: 'string' },
-              data: {
-                type: 'object',
-                properties: {
-                  image: { type: 'string' },
-                  heading: { type: 'string' },
-                  subHeading: { type: 'string' },
-                  description: { type: 'string' },
-                  primaryButtonText: { type: 'string' },
-                  secondaryButtonText: { type: 'string' },
-                },
-              },
-              order: { type: 'integer' },
-            },
-                type: 'array',
-                items: { type: 'string' },
-              },
-            },
-            required: ['section'],
-          },
-          company: { type: 'string' },
+        page: {type: 'string'},
+        company: { type: 'string' },
         },
-        required: ['template_name', 'category', 'page'],
+        required: ['template_name', 'category', 'page', 'company'],
       };
+
+
+
 
 const templateSchema = {
     _id: { type: 'string' },
@@ -44,7 +18,6 @@ const templateSchema = {
     template_name: { type: 'string' },
     page: {
       type: 'object',
-      
       properties: {
         id: { type: 'string' }, 
         pagetype: { type: 'string' },

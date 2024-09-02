@@ -20,7 +20,7 @@ module.exports = async function(fastify, options){
           
           const company = new Company({name, address, phone, logo, slug, template})
           const result = await company.save();
-          const final = await result.populate('template')
+          const final = await result.populate('template');
           reply.code(200);
           return (final)
         } catch (error) {

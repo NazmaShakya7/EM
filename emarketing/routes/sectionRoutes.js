@@ -3,6 +3,7 @@ const Section = require("../models/section");
 const setupSwagger = require('../config/swagger');
 const Template = require("../models/template");
 const mongoose = require('mongoose');
+const Page = require("../models/page");
 
 module.exports = async function(fastify, options) {
     await setupSwagger(fastify);
@@ -18,9 +19,12 @@ module.exports = async function(fastify, options) {
         handler: async function getSectionHandler(request, reply) {
             try {
                 const { id, sectionId } = request.params
+                console.log(id, "id=====21");
                 const templateID = new mongoose.Types.ObjectId(id);
                 const sectionID = new mongoose.Types.ObjectId(sectionId);
-                const template= await Template.findById({_id: templateID}).populate('section')
+        
+                const template= await Template.findById({_id: templateID})
+                console.log(template, "template=====24");
                 const section = template.section.find(section=>section._id.toString() === sectionID.toString())
                 reply.code(200);
                 return section;
@@ -48,8 +52,11 @@ module.exports = async function(fastify, options) {
             try {
                 const { id }= request.params
                 const { type, data} = request.body;
-                const template = await Template.findById(id).populate('section');
-                const newOrder = template.section.length + 1;
+                const template = await Template.findById(id);
+                console.log(template, "==========54")
+                const pageDetails = await Page.findById(template.page).populate('section');
+                console.log(pageDetails,"=======57")
+                const newOrder = 0;
                 const sectionData = {
                     type: type,
                     data: data || {}, 
@@ -71,7 +78,8 @@ module.exports = async function(fastify, options) {
             }
         }
     });
-
+    
+    
 
     fastify.put("/:sectionId", {
         schema: {

@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const schema = require("../controllers/schema/template");
 const Section = require("../models/section");
 const Template = require('../models/template');
+const Page = require('../models/page');
 const setupSwagger = require('../config/swagger');
 
 module.exports = async function(fastify, options) {
     await setupSwagger(fastify);
-    
     fastify.post("/new", {
         schema: {
             description: "Add a template",
@@ -16,22 +16,44 @@ module.exports = async function(fastify, options) {
                 200: schema.templateSchema
             }
         },
-        handler: async function addtemplateHandler(request, reply) {
+        handler: async function addTemplateHandler(request, reply) {
             try {
-                const { template_name, category, page } = request.body;
+                const { template_name, category, page, company } = request.body;
+    
+                // const sectionIds = page.section && Array.isArray(page.section) 
+                //     ? page.section.map(id => new mongoose.Types.ObjectId(id))
+                //     : [];
+    
 
-                const sectionId = Array.isArray(page.section)
-                    ? page.section.map(id => new mongoose.Types.ObjectId(id))
-                    : [new mongoose.Types.ObjectId(page.section)];
-
+                // let pageDoc = await Page.findById(page.id);
+                // if (!pageDoc) {
+                //     pageDoc = new Page({ 
+                //         _id: new mongoose.Types.ObjectId(page.id),
+                //         sections: sectionIds,
+                //         pagetype: page.pagetype,  
+                //     });
+                //     await pageDoc.save();
+                // } else {
+                //     pageDoc.sections = sectionIds;
+                //     pageDoc.pagetype = page.pagetype;
+                //     await pageDoc.save();
+                // }
+    
+                //new object template
                 const template = new Template({
                     template_name, 
                     category, 
-                    page: { section: sectionId }
+                    page,
+                    company
                 });
-
+                console.log(template,'template====49')
+               //template save and populate
                 const result = await template.save();
-                const populatedResult = await result.populate('page.section');
+                console.log(result,"result===52")
+                const populatedResult = await Template.findById(result._id).populate({
+                    path: 'page',
+                    populate: { path: 'section' }  
+                });
                 
                 console.log("Final result:", populatedResult);
                 
@@ -44,7 +66,9 @@ module.exports = async function(fastify, options) {
             }
         }
     });
-
+    
+    
+    
     fastify.get("/:id", {
         schema: {
             description: "Get a template by ID",
